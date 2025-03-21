@@ -59,6 +59,41 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+    /**
+     * @OA\Post(
+     *     path="/api/tickets",
+     *     summary="Create a new ticket",
+     *     description="Creates a new ticket in the system",
+     *     operationId="createTicket",
+     *     tags={"Tickets"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"title", "description"},
+     *             @OA\Property(property="title", type="string", example="Issue with login"),
+     *             @OA\Property(property="description", type="string", example="Unable to log in due to incorrect password error."),
+     *             @OA\Property(property="status", type="string", example="open")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Ticket created successfully",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/Ticket"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid input data"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function store(StoreTicketRequest $request)
     {
         $validated = $request->validated();
