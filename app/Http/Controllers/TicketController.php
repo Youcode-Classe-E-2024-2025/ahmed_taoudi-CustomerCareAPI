@@ -161,6 +161,52 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
+    /**
+     * @OA\Put(
+     *     path="/api/tickets/{id}",
+     *     summary="Update an existing ticket",
+     *     description="Updates a specific ticket by its ID",
+     *     operationId="updateTicket",
+     *     tags={"Tickets"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="The ID of the ticket",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"title", "description"},
+     *             @OA\Property(property="title", type="string", example="Updated issue with login"),
+     *             @OA\Property(property="description", type="string", example="Fixed the password error."),
+     *             @OA\Property(property="status", type="string", example="closed")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Ticket updated successfully",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/Ticket"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid input data"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Ticket not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function update(UpdateTicketRequest $request, string $id)
     {
         $validated = $request->validated();
