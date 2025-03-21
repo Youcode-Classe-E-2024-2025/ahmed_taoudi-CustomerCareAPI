@@ -23,7 +23,7 @@ class TicketController extends Controller
      */
     public function index()
     {
-       $tickets = $this->ticketService->getTickets();
+        $tickets = $this->ticketService->getTickets();
 
         return response()->json($tickets);
     }
@@ -63,7 +63,7 @@ class TicketController extends Controller
         $validated = $request->validated();
 
         $ticket = $this->ticketService->getTicketById($id);
-        
+
         if ($ticket->user_id !== Auth::id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -78,6 +78,14 @@ class TicketController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $ticket = $this->ticketService->getTicketById($id);
+
+        if ($ticket->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $this->ticketService->deleteTicket($id);
+
+        return response()->json(['message' => 'Ticket deleted successfully']);
     }
 }
