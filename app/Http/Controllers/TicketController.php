@@ -24,6 +24,31 @@ class TicketController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    /**
+     * @OA\Get(
+     *     path="/api/tickets",
+     *     summary="Get a list of all tickets",
+     *     description="Retrieve all tickets from the system",
+     *     operationId="getTickets",
+     *     tags={"Tickets"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of tickets",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 ref="#/components/schemas/Ticket"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function index()
     {
         $tickets = $this->ticketService->getTickets();
