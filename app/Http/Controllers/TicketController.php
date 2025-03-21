@@ -118,6 +118,39 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
+
+    /**
+     * @OA\Get(
+     *     path="/api/tickets/{id}",
+     *     summary="Get a specific ticket by ID",
+     *     description="Retrieve a specific ticket using its ID",
+     *     operationId="getTicketById",
+     *     tags={"Tickets"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="The ID of the ticket",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Ticket details",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/Ticket"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Ticket not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function show(string $id)
     {
         $ticket = $this->ticketService->getTicketById($id);
