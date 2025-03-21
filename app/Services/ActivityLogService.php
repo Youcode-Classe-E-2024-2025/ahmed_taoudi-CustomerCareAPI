@@ -16,7 +16,7 @@ class ActivityLogService
      * @param string $subjectId
      * @return \App\Models\ActivityLog
      */
-    public function logActivity(string $action, string $description, string $subjectType, string $subjectId)
+    public function log(string $action, string $description, string $subjectType, string $subjectId)
     {
 
         return ActivityLog::create([

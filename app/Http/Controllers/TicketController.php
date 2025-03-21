@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
 use App\Models\Ticket;
+use App\Services\ActivityLogService;
 use App\Services\TicketService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,10 +13,12 @@ use Illuminate\Support\Facades\Auth;
 class TicketController extends Controller
 {
     protected $ticketService;
+    protected $activityLogService;
 
-    public function __construct(TicketService $ticketService)
+    public function __construct(TicketService $ticketService, ActivityLogService $activityLogService)
     {
         $this->ticketService = $ticketService;
+        $this->activityLogService = $activityLogService;
     }
 
     /**
@@ -41,6 +44,13 @@ class TicketController extends Controller
             'description' => $validated['description'],
             'status' => $validated['status'] ?? 'open',
         ]);
+
+        $this->activityLogService->log(
+            'created',
+            'Ticket created',
+            'Ticket',
+            $ticket->id
+        );
 
         return response()->json($ticket, 201);
     }
@@ -70,6 +80,12 @@ class TicketController extends Controller
 
         $updatedTicket = $this->ticketService->updateTicket($id, $validated);
 
+        $this->activityLogService->log(
+            'updated',
+            'Ticket updated',
+            'Ticket',
+            $ticket->id
+        );
         return response()->json($updatedTicket);
     }
 
@@ -85,6 +101,13 @@ class TicketController extends Controller
         }
 
         $this->ticketService->deleteTicket($id);
+
+        $this->activityLogService->log(
+            'deleted',
+            'Ticket deleted',
+            'Ticket',
+            $ticket->id
+        );
 
         return response()->json(['message' => 'Ticket deleted successfully']);
     }
