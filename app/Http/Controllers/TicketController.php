@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTicketRequest;
+use App\Http\Requests\UpdateTicketRequest;
 use App\Models\Ticket;
 use App\Services\TicketService;
 use Illuminate\Http\Request;
@@ -57,9 +58,19 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateTicketRequest $request, string $id)
     {
-        //
+        $validated = $request->validated();
+
+        $ticket = $this->ticketService->getTicketById($id);
+        
+        if ($ticket->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $updatedTicket = $this->ticketService->updateTicket($id, $validated);
+
+        return response()->json($updatedTicket);
     }
 
     /**
