@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTicketRequest;
 use App\Models\Ticket;
 use App\Services\TicketService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
@@ -28,9 +30,18 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreTicketRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        $ticket = $this->ticketService->createTicket([
+            'user_id' => Auth::id(),
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'status' => $validated['status'] ?? 'open',
+        ]);
+
+        return response()->json($ticket, 201);
     }
 
     /**
