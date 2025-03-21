@@ -49,7 +49,9 @@ class TicketController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $ticket = $this->ticketService->getTicketById($id);
+
+        return response()->json($ticket);
     }
 
     /**
