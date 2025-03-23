@@ -71,6 +71,7 @@ class ResponseController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $this->responseService->deleteResponse($id);
+        return response()->json(['message' => 'Response deleted successfully']);
     }
 }
