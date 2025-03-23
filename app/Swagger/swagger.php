@@ -58,6 +58,18 @@ namespace App\Swagger;
  *         example="2025-03-21T12:30:00Z"
  *     )
  * )
+ *  @OA\Schema(
+ *     schema="Response",
+ *     type="object",
+ *     required={"id", "ticket_id", "user_id", "response", "created_at", "updated_at"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="ticket_id", type="integer", example=1),
+ *     @OA\Property(property="user_id", type="integer", example=5),
+ *     @OA\Property(property="response", type="string", example="This is a response to the ticket."),
+ *     @OA\Property(property="created_at", type="string", format="date-time", example="2025-03-23T12:34:56Z"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", example="2025-03-23T12:34:56Z")
+ * )
+
  */
 
-class Swagger {}
+class swagger {}
