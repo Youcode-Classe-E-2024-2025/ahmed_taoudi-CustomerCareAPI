@@ -46,7 +46,8 @@ class ResponseController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $response = $this->responseService->getResponseById($id);
+        return response()->json($response);
     }
 
     /**
