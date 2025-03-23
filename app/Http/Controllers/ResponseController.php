@@ -150,6 +150,50 @@ class ResponseController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
+    /**
+     * @OA\Put(
+     *     path="/api/responses/{id}",
+     *     summary="Update an existing response",
+     *     description="Updates a specific response by its ID",
+     *     operationId="updateResponse",
+     *     tags={"Responses"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="The ID of the response",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"response"},
+     *             @OA\Property(property="response", type="string", example="Updated response.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Response updated successfully",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/Response"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid input data"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Response not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function update(UpdateResponseRequest $request, string $id)
     {
         $validated = $request->validated();
