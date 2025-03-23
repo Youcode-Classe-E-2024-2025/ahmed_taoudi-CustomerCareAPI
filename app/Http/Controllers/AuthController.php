@@ -94,6 +94,28 @@ class AuthController extends Controller
         return response()->json($result);
     }
 
+
+    /**
+     * @OA\Post(
+     *     path="/api/logout",
+     *     summary="Logout the authenticated user",
+     *     description="Logs out the authenticated user and invalidates their token.",
+     *     operationId="logoutUser",
+     *     tags={"Auth"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Logout successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Logout successful")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized, no active session"
+     *     )
+     * )
+     */
     public function logout()
     {
         $this->authService->logout(Auth::user());
