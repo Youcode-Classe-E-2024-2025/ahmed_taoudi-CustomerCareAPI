@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreResponseRequest;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ResponseController extends Controller
 {
@@ -26,9 +28,17 @@ class ResponseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreResponseRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        $response = $this->responseService->createResponse([
+            'ticket_id' => $validated['ticket_id'],
+            'user_id' => Auth::id(),
+            'response' => $validated['response']
+        ]);
+
+        return response()->json($response, 201);
     }
 
     /**
