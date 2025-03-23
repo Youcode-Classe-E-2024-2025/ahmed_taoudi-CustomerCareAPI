@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreResponseRequest;
 use App\Http\Requests\UpdateResponseRequest;
+use App\Services\ActivityLogService;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,10 +12,12 @@ use Illuminate\Support\Facades\Auth;
 class ResponseController extends Controller
 {
     protected $responseService;
+    protected $activityLogService;
 
-    public function __construct(ResponseService $responseService)
+    public function __construct(ResponseService $responseService,ActivityLogService $activityLogService)
     {
         $this->responseService = $responseService;
+        $this->activityLogService = $activityLogService;
     }
 
     /**
@@ -111,6 +114,13 @@ class ResponseController extends Controller
             'response' => $validated['response']
         ]);
 
+        $this->activityLogService->log(
+            'created',
+            'Response created',
+            'Response',
+            $response->id
+        );
+
         return response()->json($response, 201);
     }
 
@@ -205,11 +215,24 @@ class ResponseController extends Controller
      */
     public function update(UpdateResponseRequest $request, string $id)
     {
+        $response = $this->responseService->getResponseById($id);
+
+        if ($response->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+        
         $validated = $request->validated();
 
         $updatedResponse = $this->responseService->updateResponse($id, [
             'response' => $validated['response']
         ]);
+
+        $this->activityLogService->log(
+            'updated',
+            'Response updated',
+            'Response',
+            $updatedResponse->id
+        );
 
         return response()->json($updatedResponse);
     }
@@ -254,7 +277,21 @@ class ResponseController extends Controller
      */
     public function destroy(string $id)
     {
+        $response = $this->responseService->getResponseById($id);
+
+        if ($response->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
         $this->responseService->deleteResponse($id);
+        
+        $this->activityLogService->log(
+            'deleted',
+            'Response deleted',
+            'Response',
+            $id
+        );
+        
         return response()->json(['message' => 'Response deleted successfully']);
     }
 }
