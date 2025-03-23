@@ -108,6 +108,39 @@ class ResponseController extends Controller
     /**
      * Display the specified resource.
      */
+
+    /**
+     * @OA\Get(
+     *     path="/api/responses/{id}",
+     *     summary="Get a specific response by ID",
+     *     description="Retrieve a specific response using its ID",
+     *     operationId="getResponseById",
+     *     tags={"Responses"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="The ID of the response",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Response details",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/Response"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Response not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function show(string $id)
     {
         $response = $this->responseService->getResponseById($id);
