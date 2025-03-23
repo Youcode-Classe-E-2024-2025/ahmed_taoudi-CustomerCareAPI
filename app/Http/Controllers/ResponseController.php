@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreResponseRequest;
+use App\Http\Requests\UpdateResponseRequest;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,10 +54,17 @@ class ResponseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateResponseRequest $request, string $id)
     {
-        //
+        $validated = $request->validated();
+
+        $updatedResponse = $this->responseService->updateResponse($id, [
+            'response' => $validated['response']
+        ]);
+
+        return response()->json($updatedResponse);
     }
+
 
     /**
      * Remove the specified resource from storage.
