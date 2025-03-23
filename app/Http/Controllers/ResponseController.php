@@ -20,6 +20,35 @@ class ResponseController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    /**
+     * @OA\Get(
+     *     path="/api/responses/{ticket_id}",
+     *     summary="Get a list of all responses for a ticket",
+     *     description="Retrieve all responses for a given ticket",
+     *     operationId="getResponsesForTicket",
+     *     tags={"Responses"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of responses",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 ref="#/components/schemas/Response"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Ticket not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function index(string $ticketId)
     {
         $responses = $this->responseService->getResponsesForTicket($ticketId);
