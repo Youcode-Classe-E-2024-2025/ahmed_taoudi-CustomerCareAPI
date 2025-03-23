@@ -21,4 +21,5 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::apiResource('tickets',TicketController::class)->middleware('auth:sanctum');
 
-Route::resource('responses', ResponseController::class)->middleware('auth:sanctum');
+Route::resource('responses', ResponseController::class)->except('index')->middleware('auth:sanctum');
+Route::get('responses/ticket/{ticket_id}',[ResponseController::class ,'index'])->middleware('auth:sanctum');

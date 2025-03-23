@@ -20,18 +20,27 @@ class ResponseController extends Controller
     /**
      * Display a listing of the resource.
      */
-
-    /**
+/**
      * @OA\Get(
-     *     path="/api/responses/{ticket_id}",
+     *     path="/api/responses/ticket/{ticket_id}",
      *     summary="Get a list of all responses for a ticket",
-     *     description="Retrieve all responses for a given ticket",
+     *     description="Retrieve all responses for a given ticket by its ID",
      *     operationId="getResponsesForTicket",
      *     tags={"Responses"},
      *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="ticket_id",
+     *         in="path",
+     *         required=true,
+     *         description="The ID of the ticket for which responses are being retrieved",
+     *         @OA\Schema(
+     *             type="string",
+     *             example="1"
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="List of responses",
+     *         description="List of responses for the specified ticket",
      *         @OA\JsonContent(
      *             type="array",
      *             @OA\Items(
