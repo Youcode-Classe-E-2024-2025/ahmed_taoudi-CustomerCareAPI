@@ -58,6 +58,40 @@ class ResponseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+    /**
+     * @OA\Post(
+     *     path="/api/responses",
+     *     summary="Create a new response",
+     *     description="Creates a new response for a ticket",
+     *     operationId="createResponse",
+     *     tags={"Responses"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"ticket_id", "response"},
+     *             @OA\Property(property="ticket_id", type="integer", example=1),
+     *             @OA\Property(property="response", type="string", example="This is the response.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Response created successfully",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/Response"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid input data"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function store(StoreResponseRequest $request)
     {
         $validated = $request->validated();
