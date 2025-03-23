@@ -2,16 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ResponseService;
 use Illuminate\Http\Request;
 
 class ResponseController extends Controller
 {
+    protected $responseService;
+
+    public function __construct(ResponseService $responseService)
+    {
+        $this->responseService = $responseService;
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $ticketId)
     {
-        //
+        $responses = $this->responseService->getResponsesForTicket($ticketId);
+        return response()->json($responses);
     }
 
     /**
