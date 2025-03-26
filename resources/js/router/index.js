@@ -6,9 +6,9 @@ import TicketList from '../views/TicketList.vue'
 const router = createRouter({
   history: createWebHistory(), 
   routes: [
-    { path: '/', component: Home },
-    { path: '/connection', component: Auth },
-    { path: '/tickets', component: TicketList },
+    { path: '/', name:'Home', component: Home },
+    { path: '/connection', name:'Auth', component: Auth },
+    { path: '/tickets',name:'TicketList', component: TicketList },
 
   ],
 });
