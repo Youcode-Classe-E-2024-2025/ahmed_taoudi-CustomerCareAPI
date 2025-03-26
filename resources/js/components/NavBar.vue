@@ -113,7 +113,31 @@
     </header>
   </template>
   
-  <script setup></script>
-  
+<script setup>
+import {onMounted, ref  } from 'vue';
+let mobileMenuOpen = ref(false);
+let isLoggedIn = ref(false);
+
+const userProfile = ref({
+    name :'',
+    email:'',
+});
+
+onMounted( ()=>{
+    const storedUser = localStorage.getItem('user');
+    if(storedUser){
+       const user = JSON.parse(storedUser);
+       isLoggedIn.value = true;
+       userProfile.value = user;
+    }
+})
+
+const toggleMobileMenu = ()=>{
+    mobileMenuOpen.value = !mobileMenuOpen.value;
+};
+
+</script>
+
+
   <style scoped></style>
   
