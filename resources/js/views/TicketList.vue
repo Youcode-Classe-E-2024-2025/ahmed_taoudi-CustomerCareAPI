@@ -36,7 +36,7 @@
           :key="ticket.id"
           class="p-4 border rounded-lg dark:border-gray-700 dark:bg-gray-800"
         >
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ ticket.title }}</h3>
+          <h3  @click="goToDetails(ticket.id)"  class="text-lg hover:underline font-semibold text-gray-900 dark:text-white">{{ ticket.title }}</h3>
           <p class="text-gray-700 dark:text-gray-300 mt-2">{{ ticket.description }}</p>
           <p class="text-sm text-gray-500 mt-2">Status: {{ ticket.status }}</p>
           <div class="flex space-x-2 mt-4">
@@ -71,8 +71,8 @@
             link.active ? 'bg-primary text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300',
             !link.url && 'cursor-not-allowed opacity-50'
           ]"
+           v-html="link.label"
         >
-          {{ link.label === ' &laquo; Previous' ? 'Previous' : link.label === 'Next &raquo; ' ? 'Next' : link.label }}
         </button>
       </div>
     </div>
@@ -81,6 +81,7 @@
 
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const token = localStorage.getItem("auth_token");
@@ -139,6 +140,13 @@ async function deleteTicket(id) {
   });
   fetchTickets();
 }
+
+const router = useRouter();
+defineProps(['ticket']);
+
+const goToDetails = (id) => {
+    router.push({ name: 'TicketDetails', params: { id } });
+};
 
 function resetForm() {
   Object.assign(form, { id: null, title: '', description: '' });
