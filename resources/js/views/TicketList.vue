@@ -59,9 +59,89 @@
       <!-- No Tickets Message -->
       <p v-else class="text-gray-500 text-center mt-4">No tickets available.</p>
 
-
+      <!-- Pagination Links -->
+      <div v-if="pagination.links.length > 0" class="flex justify-center mt-6 space-x-2">
+        <button
+          v-for="(link, index) in pagination.links"
+          :key="index"
+          @click="fetchPage(link.url)"
+          :disabled="!link.url"
+          :class="[
+            'px-3 py-1 rounded',
+            link.active ? 'bg-primary text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300',
+            !link.url && 'cursor-not-allowed opacity-50'
+          ]"
+        >
+          {{ link.label === ' &laquo; Previous' ? 'Previous' : link.label === 'Next &raquo; ' ? 'Next' : link.label }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { onMounted, reactive, ref } from 'vue';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const token = localStorage.getItem("auth_token");
+const tickets = ref([]);
+const pagination = ref({ links: [] });
+const isEditing = ref(false);
+const form = reactive({ id: null, title: '', description: '' });
+
+onMounted(fetchTickets);
+
+async function fetchTickets(url = `${API_BASE_URL}/api/tickets`) {
+  try {
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await response.json();
+    tickets.value = data.data;
+    pagination.value = {
+      links: data.links,
+      current_page: data.current_page,
+      last_page: data.last_page,
+    };
+  } catch (error) {
+    console.error('Error fetching tickets:', error);
+  }
+}
+
+async function fetchPage(url) {
+  if (url) {
+    await fetchTickets(url);
+  }
+}
+
+async function handleSubmit() {
+  const method = isEditing.value ? 'PUT' : 'POST';
+  const url = isEditing.value ? `${API_BASE_URL}/api/tickets/${form.id}` : `${API_BASE_URL}/api/tickets`;
+
+  await fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(form),
+  });
+  resetForm();
+  fetchTickets();
+}
+
+function editTicket(ticket) {
+  Object.assign(form, ticket);
+  isEditing.value = true;
+}
+
+async function deleteTicket(id) {
+  await fetch(`${API_BASE_URL}/api/tickets/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  fetchTickets();
+}
+
+function resetForm() {
+  Object.assign(form, { id: null, title: '', description: '' });
+  isEditing.value = false;
+}
+</script>
