@@ -189,6 +189,7 @@
 <script setup>
 import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import { authStore } from "../authStore.js"; 
 
 const router = useRouter();
 const activeTab = ref("login");
@@ -245,10 +246,9 @@ const handleLogin = async () => {
         if (!response.ok) {
             throw new Error(data.message || "Login failed");
         }
-        token.value = data.token;
-        localStorage.setItem("auth_token", data.token);
 
-        await fetchUserInfo() ;
+        const userInfo = await fetchUserInfo(data.token) ;
+        authStore.login(userInfo, data.token);
         loginForm.email = "";
         loginForm.password = "";
         router.push({ name: 'Home' });
@@ -297,7 +297,7 @@ const handleRegister = async () => {
     registerForm.password = ''
     registerForm.password_confirmation = ''
     
-    activeTab.value = 'login'
+    // activeTab.value = 'login'
     
   } catch (error) {
     registerError.value = error.message || 'An error occurred during registration'
@@ -308,21 +308,18 @@ const handleRegister = async () => {
 };
 
 // Fetch user info
-const fetchUserInfo = async () => {
+const fetchUserInfo = async (token) => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/user`, {
       headers: {
-        'Authorization': `Bearer ${token.value}`
-      }
-    })
-    
+        Authorization: `Bearer ${token}`,
+      },
+    });
     if (response.ok) {
-      const userData = await response.json()
-      user.value = userData
-      localStorage.setItem('user', JSON.stringify(userData))
+      return await response.json();
     }
   } catch (error) {
-    console.error('Error fetching user info:', error)
+    console.error("Error fetching user info:", error);
   }
 }
 </script>

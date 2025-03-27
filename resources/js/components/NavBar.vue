@@ -37,18 +37,20 @@
             >Home
         </router-link>
           <router-link
+          v-if="authStore.isLoggedIn"
             to="/tickets"
             class="text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary"
             >Tickets
         </router-link>
-          <router-link
+          <!-- <router-link
+           v-if="authStore.isLoggedIn"
             to="/responses"
             class="text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary"
             >Responses
-        </router-link>
+        </router-link> -->
 
-          <div v-if="isLoggedIn" class="flex items-center space-x-4">
-            <span class="text-gray-900 dark:text-white">{{ userProfile.name }}</span>
+          <div  v-if="authStore.isLoggedIn" class="flex items-center space-x-4">
+            <span class="text-gray-900 dark:text-white">{{ authStore.userProfile?.name }}</span>
             <button
               @click="logout"
               class="text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary"
@@ -70,29 +72,28 @@
         >
           <nav class="flex flex-col space-y-4 p-4">
             <router-link
+             v-if="authStore.isLoggedIn"
               to="/home"
               class="text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary"
               >Home</router-link
             >
+            
             <router-link
-              to="/connection"
-              class="text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary"
-              >Connection</router-link
-            >
-            <router-link
+             v-if="authStore.isLoggedIn"
               to="/tickets"
               class="text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary"
               >Tickets</router-link
             >
             <router-link
+             v-if="authStore.isLoggedIn"
               to="/responses"
               class="text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary"
               >Responses</router-link
             >
   
             <!-- auth -->
-            <div v-if="isLoggedIn" class="flex items-center space-x-4">
-              <span class="text-gray-900 dark:text-white">{{ userProfile.name }}</span>
+            <div  v-if="authStore.isLoggedIn" class="flex items-center space-x-4">
+              <span class="text-gray-900 dark:text-white">{{ authStore.userProfile?.name }}</span>
               <button
                 @click="logout"
                 class="text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary"
@@ -115,25 +116,16 @@
   
 <script setup>
 import {onMounted, ref  } from 'vue';
+import { authStore } from "../authStore.js";
 let mobileMenuOpen = ref(false);
-let isLoggedIn = ref(false);
-
-const userProfile = ref({
-    name :'',
-    email:'',
-});
-
-onMounted( ()=>{
-    const storedUser = localStorage.getItem('user');
-    if(storedUser){
-       const user = JSON.parse(storedUser);
-       isLoggedIn.value = true;
-       userProfile.value = user;
-    }
-})
 
 const toggleMobileMenu = ()=>{
     mobileMenuOpen.value = !mobileMenuOpen.value;
+};
+
+// Logout Method
+const logout = () => {
+  authStore.logout(); // Call the logout method from the shared state
 };
 
 </script>
