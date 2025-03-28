@@ -117,15 +117,17 @@
 <script setup>
 import {onMounted, ref  } from 'vue';
 import { authStore } from "../authStore.js";
+import { useRouter } from 'vue-router';
 let mobileMenuOpen = ref(false);
 
 const toggleMobileMenu = ()=>{
     mobileMenuOpen.value = !mobileMenuOpen.value;
 };
-
+const router = useRouter();
 // Logout Method
 const logout = () => {
   authStore.logout(); // Call the logout method from the shared state
+  router.push('/connection');
 };
 
 </script>
