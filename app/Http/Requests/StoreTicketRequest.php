@@ -27,4 +27,11 @@ class StoreTicketRequest extends FormRequest
             'status' => 'nullable|in:open,in_progress,closed', 
         ];
     }
+    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        throw new \Illuminate\Validation\ValidationException($validator, response()->json([
+            'message' => 'Validation error',
+            'errors' => $validator->errors()
+        ], 422));
+    }
 }

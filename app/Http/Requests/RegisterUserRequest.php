@@ -27,4 +27,12 @@ class RegisterUserRequest extends FormRequest
             'password' => 'required|string|min:8',
         ];
     }
+
+    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        throw new \Illuminate\Validation\ValidationException($validator, response()->json([
+            'message' => 'Validation error',
+            'errors' => $validator->errors()
+        ], 422));
+    }
 }
