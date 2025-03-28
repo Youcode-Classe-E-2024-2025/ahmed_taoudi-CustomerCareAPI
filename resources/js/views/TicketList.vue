@@ -3,6 +3,9 @@
     <!-- Ticket Management Container -->
     <div class="max-w-md w-full mx-auto bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6">
       <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-4">Manage Tickets</h2>
+    
+<!-- Status Filter  -->
+
 
       <!-- Create/Edit Ticket Form -->
       <form @submit.prevent="handleSubmit" class="mt-6 space-y-4">
@@ -30,6 +33,54 @@
 
     <!-- Ticket List Section -->
     <div class="mt-8">
+      <div class="flex justify-center mb-4">
+  <label class="mr-4 text-gray-700 dark:text-gray-300 font-semibold">Filter by Status:</label>
+  <div class="flex space-x-2">
+    <!-- All Button -->
+    <button
+      @click="setSelectedStatus('')"
+      :class="[
+        'inline-flex items-center px-4 py-2 border rounded-full text-sm font-medium transition-all duration-200 ease-in-out',
+        selectedStatus === '' ? 'bg-purple-200 text-green-800 hover:bg-purple-300' : 'bg-white text-gray-700 hover:bg-purple-50'
+      ]"
+    >
+      All
+    </button>
+
+    <!-- Open Button -->
+    <button
+      @click="setSelectedStatus('open')"
+      :class="[
+        'inline-flex items-center px-4 py-2 border rounded-full text-sm font-medium transition-all duration-200 ease-in-out',
+        selectedStatus === 'open' ? 'bg-purple-200 text-green-800 hover:bg-purple-300' : 'bg-white text-gray-700 hover:bg-purple-50'
+      ]"
+    >
+      Open
+    </button>
+
+    <!-- In Progress Button -->
+    <button
+      @click="setSelectedStatus('in_progress')"
+      :class="[
+        'inline-flex items-center px-4 py-2 border rounded-full text-sm font-medium transition-all duration-200 ease-in-out',
+        selectedStatus === 'in_progress' ? 'bg-purple-200 text-green-800 hover:bg-purple-300' : 'bg-white text-gray-700 hover:bg-purple-50'
+      ]"
+    >
+      In Progress
+    </button>
+
+    <!-- Closed Button -->
+    <button
+      @click="setSelectedStatus('closed')"
+      :class="[
+        'inline-flex items-center px-4 py-2 border rounded-full text-sm font-medium transition-all duration-200 ease-in-out',
+        selectedStatus === 'closed' ? 'bg-purple-200 text-green-800 hover:bg-purple-300' : 'bg-white text-gray-700 hover:bg-purple-50'
+      ]"
+    >
+      Closed
+    </button>
+  </div>
+</div>
       <div v-if="tickets.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <div
           v-for="ticket in tickets"
@@ -89,11 +140,15 @@ const tickets = ref([]);
 const pagination = ref({ links: [] });
 const isEditing = ref(false);
 const form = reactive({ id: null, title: '', description: '' });
-
+const selectedStatus = ref('');
 onMounted(fetchTickets);
 
 async function fetchTickets(url = `${API_BASE_URL}/api/tickets`) {
   try {
+    if (selectedStatus.value) {
+      url += `?status=${selectedStatus.value}`;
+    }
+
     const response = await fetch(url, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -114,6 +169,16 @@ async function fetchPage(url) {
     await fetchTickets(url);
   }
 }
+
+function applyFilter() {
+  fetchTickets(`${API_BASE_URL}/api/tickets`);
+}
+
+function setSelectedStatus(status) {
+  selectedStatus.value = status; 
+  applyFilter(); 
+}
+
 
 async function handleSubmit() {
   const method = isEditing.value ? 'PUT' : 'POST';

@@ -10,9 +10,15 @@ class TicketService
     /**
      * Get a list of tickets with pagination.
      */
-    public function getTickets()
+    public function getTickets(?string $status = null)
     {
-        return Ticket::with('user')->paginate(10);
+        // return Ticket::with('user')->paginate(6);
+        $query = Ticket::with('user');
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        return $query->paginate(6);
     }
 
     /**
@@ -39,7 +45,7 @@ class TicketService
      */
     public function getTicketById(string $id)
     {
-        return Ticket::with('responses', 'user')->findOrFail($id);
+        return Ticket::with('responses.user', 'user')->findOrFail($id);
     }
 
     /**

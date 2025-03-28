@@ -25,7 +25,7 @@ class AuthService
         ]);
 
         // Événement d'enregistrement
-        event(new Registered($user));
+        // event(new Registered($user));
 
         return $user;
     }
@@ -40,7 +40,8 @@ class AuthService
         $user = User::where('email', $validated['email'])->first();
 
         if (!$user || !Hash::check($validated['password'], $user->password)) {
-            throw new \Exception('Email ou mot de passe invalide');
+            // throw new \Exception('Email ou mot de passe invalide');
+            return false ;
         }
 
         // Générer un token d'accès
