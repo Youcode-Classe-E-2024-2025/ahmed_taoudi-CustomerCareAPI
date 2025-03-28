@@ -10,10 +10,10 @@ class TicketService
     /**
      * Get a list of tickets with pagination.
      */
-    public function getTickets(?string $status = null)
+    public function getTickets($user_id,?string $status = null)
     {
         // return Ticket::with('user')->paginate(6);
-        $query = Ticket::with('user');
+        $query = Ticket::with('user')->where('user_id',$user_id);
         if ($status) {
             $query->where('status', $status);
         }

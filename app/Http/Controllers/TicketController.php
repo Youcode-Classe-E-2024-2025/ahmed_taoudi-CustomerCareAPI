@@ -52,8 +52,8 @@ class TicketController extends Controller
     public function index(Request $request)
     {
         $status = $request->query('status');
-        
-        $tickets = $this->ticketService->getTickets($status);
+        $user_id=$request->user()->id;
+        $tickets = $this->ticketService->getTickets($user_id,$status);
 
         return response()->json($tickets);
     }
