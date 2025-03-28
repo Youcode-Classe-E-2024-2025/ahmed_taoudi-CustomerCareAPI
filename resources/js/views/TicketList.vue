@@ -145,8 +145,9 @@ onMounted(fetchTickets);
 
 async function fetchTickets(url = `${API_BASE_URL}/api/tickets`) {
   try {
+    const hasQueryParams = url.includes('?');
     if (selectedStatus.value) {
-      url += `?status=${selectedStatus.value}`;
+      url += hasQueryParams ? `&status=${selectedStatus.value}` : `?status=${selectedStatus.value}`;
     }
 
     const response = await fetch(url, {
